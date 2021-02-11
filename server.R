@@ -27,12 +27,19 @@ server <- function(input, output, session) {
     updateSelectInput(session, "hist_sample", choices = samples)
     updateSelectInput(session, "reference_col", choices = c(samples, "NULL"), selected = "NULL")
     updateSelectInput(session, "rle_fill_by", choices = metadata_cols, selected = "group")
+    updateSelectInput(session, "rle_fill_by2", choices = metadata_cols, selected = "group")
     updateSelectInput(session, "ma_sample1", choices = samples, selected = samples[[1]])
     updateSelectInput(session, "ma_sample2", choices = samples, selected = samples[[2]])
+    updateSelectInput(session, "ma_sample12", choices = samples, selected = samples[[1]])
+    updateSelectInput(session, "ma_sample22", choices = samples, selected = samples[[2]])
     updateSelectInput(session, "scatter_sample1", choices = samples, selected = samples[[1]])
     updateSelectInput(session, "scatter_sample2", choices = samples, selected = samples[[2]])
+    updateSelectInput(session, "scatter_sample12", choices = samples, selected = samples[[1]])
+    updateSelectInput(session, "scatter_sample22", choices = samples, selected = samples[[2]])
     updateSelectInput(session, "pca_color_by", choices = metadata_cols, selected = "group")
     updateSelectInput(session, "pca_shape_by", choices = c(metadata_cols, "NULL"), selected = "NULL")
+    updateSelectInput(session, "pca_color_by2", choices = metadata_cols, selected = "group")
+    updateSelectInput(session, "pca_shape_by2", choices = c(metadata_cols, "NULL"), selected = "NULL")
 
     # filter/normalize/plot on RUN
     observeEvent(input$run, {
@@ -61,14 +68,26 @@ server <- function(input, output, session) {
       output$rle <- renderPlot({
         plot_rle(normed, input$rle_norm_method, input$rle_fill_by, input$rle_outlier_shape, input$rle_outlier_alpha)
       })
+      output$rle2 <- renderPlot({
+        plot_rle(normed, input$rle_norm_method2, input$rle_fill_by2, input$rle_outlier_shape2, input$rle_outlier_alpha2)
+      })
       output$ma <- renderPlot({
         plot_smear(normed, input$ma_norm_method, input$ma_sample1, input$ma_sample2, input$ma_smooth, input$ma_loess)
+      })
+      output$ma2 <- renderPlot({
+        plot_smear(normed, input$ma_norm_method2, input$ma_sample12, input$ma_sample22, input$ma_smooth2, input$ma_loess2)
       })
       output$scatter <- renderPlot({
         plot_scatter(normed, input$scatter_norm_method, input$scatter_sample1, input$scatter_sample2, input$scatter_pt_alpha, input$scatter_log)
       })
+      output$scatter2 <- renderPlot({
+        plot_scatter(normed, input$scatter_norm_method2, input$scatter_sample12, input$scatter_sample22, input$scatter_pt_alpha2, input$scatter_log2)
+      })
       output$pca <- renderPlot({
         plot_pca(normed, input$pca_norm_method, input$pca_scale, input$pca_center, input$pca_component1, input$pca_component2, input$pca_color_by, input$pca_shape_by)
+      })
+      output$pca2 <- renderPlot({
+        plot_pca(normed, input$pca_norm_method2, input$pca_scale2, input$pca_center2, input$pca_component12, input$pca_component22, input$pca_color_by2, input$pca_shape_by2)
       })
     })
   })

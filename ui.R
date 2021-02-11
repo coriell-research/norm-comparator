@@ -1,7 +1,9 @@
 library(shiny)
+library(shinythemes)
 
 
 ui <- fluidPage(
+  theme = shinytheme("cerulean"),
   titlePanel("Explore Normalization Methods"),
   sidebarLayout(
     sidebarPanel(
@@ -76,116 +78,250 @@ ui <- fluidPage(
             label = "Enter number of bins",
             value = 30, min = 5, max = 100
           ),
-          h3("Raw Data"),
-          plotOutput("raw_hist"),
-          h3("Filtered Data"),
-          plotOutput("filt_hist")
+          fluidRow(
+            column(
+              width = 6,
+              h3("Raw Data"),
+              plotOutput("raw_hist")
+            ),
+            column(
+              width = 6,
+              h3("Filtered Data"),
+              plotOutput("filt_hist")
+            )
+          ),
         ),
         tabPanel(
           "RLE",
-          selectInput("rle_norm_method",
-            label = "Select normalization Method",
-            choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
-            selected = "TMM"
-          ),
-          selectInput("rle_fill_by",
-            label = "Fill by",
-            choices = NULL
-          ),
-          numericInput("rle_outlier_shape",
-            label = "Outlier shape",
-            value = NA
-          ),
-          numericInput("rle_outlier_alpha",
-            label = "Outlier alpha",
-            value = 0.5
-          ),
-          plotOutput("rle")
+          fluidRow(
+            column(
+              width = 6,
+              selectInput("rle_norm_method",
+                label = "Select normalization Method",
+                choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
+                selected = "TMM"
+              ),
+              selectInput("rle_fill_by",
+                label = "Fill by",
+                choices = NULL
+              ),
+              numericInput("rle_outlier_shape",
+                label = "Outlier shape",
+                value = NA
+              ),
+              numericInput("rle_outlier_alpha",
+                label = "Outlier alpha",
+                value = 0.5
+              ),
+              plotOutput("rle")
+            ),
+            column(
+              width = 6,
+              selectInput("rle_norm_method2",
+                label = "Select normalization Method",
+                choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
+                selected = "TMM"
+              ),
+              selectInput("rle_fill_by2",
+                label = "Fill by",
+                choices = NULL
+              ),
+              numericInput("rle_outlier_shape2",
+                label = "Outlier shape",
+                value = NA
+              ),
+              numericInput("rle_outlier_alpha2",
+                label = "Outlier alpha",
+                value = 0.5
+              ),
+              plotOutput("rle2")
+            )
+          )
         ),
         tabPanel(
           "MA",
-          selectInput("ma_norm_method",
-            label = "Select normalization method",
-            choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
-            selected = "TMM"
-          ),
-          selectInput("ma_sample1",
-            label = "Sample 1",
-            choices = NULL
-          ),
-          selectInput("ma_sample2",
-            label = "Sample 2",
-            choices = NULL
-          ),
-          checkboxInput("ma_smooth",
-            label = "Smooth scatter",
-            value = FALSE
-          ),
-          checkboxInput("ma_loess",
-            label = "Plot lowess line",
-            value = FALSE
-          ),
-          plotOutput("ma")
+          fluidRow(
+            column(
+              width = 6,
+              selectInput("ma_norm_method",
+                label = "Select normalization method",
+                choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                selected = "TMM"
+              ),
+              selectInput("ma_sample1",
+                label = "Sample 1",
+                choices = NULL
+              ),
+              selectInput("ma_sample2",
+                label = "Sample 2",
+                choices = NULL
+              ),
+              checkboxInput("ma_smooth",
+                label = "Smooth scatter",
+                value = FALSE
+              ),
+              checkboxInput("ma_loess",
+                label = "Plot lowess line",
+                value = FALSE
+              ),
+              plotOutput("ma")
+            ),
+            column(
+              width = 6,
+              selectInput("ma_norm_method2",
+                label = "Select normalization method",
+                choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                selected = "TMM"
+              ),
+              selectInput("ma_sample12",
+                label = "Sample 1",
+                choices = NULL
+              ),
+              selectInput("ma_sample22",
+                label = "Sample 2",
+                choices = NULL
+              ),
+              checkboxInput("ma_smooth2",
+                label = "Smooth scatter",
+                value = FALSE
+              ),
+              checkboxInput("ma_loess2",
+                label = "Plot lowess line",
+                value = FALSE
+              ),
+              plotOutput("ma2")
+            )
+          )
         ),
         tabPanel(
           "Scatter",
-          selectInput("scatter_norm_method",
-            label = "Select normalization method",
-            choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
-            selected = "TMM"
-          ),
-          selectInput("scatter_sample1",
-            label = "Sample 1",
-            choices = NULL
-          ),
-          selectInput("scatter_sample2",
-            label = "Sample 2",
-            choices = NULL
-          ),
-          numericInput("scatter_pt_alpha",
-            label = "Point Alpha",
-            value = 0.5
-          ),
-          checkboxInput("scatter_log",
-            label = "Log scale axis",
-            value = TRUE
-          ),
-          plotOutput("scatter")
+          fluidRow(
+            column(
+              width = 6,
+              selectInput("scatter_norm_method",
+                label = "Select normalization method",
+                choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                selected = "TMM"
+              ),
+              selectInput("scatter_sample1",
+                label = "Sample 1",
+                choices = NULL
+              ),
+              selectInput("scatter_sample2",
+                label = "Sample 2",
+                choices = NULL
+              ),
+              numericInput("scatter_pt_alpha",
+                label = "Point Alpha",
+                value = 0.5
+              ),
+              checkboxInput("scatter_log",
+                label = "Log scale axis",
+                value = TRUE
+              ),
+              plotOutput("scatter")
+            ),
+            column(
+              width = 6,
+              selectInput("scatter_norm_method2",
+                label = "Select normalization method",
+                choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                selected = "TMM"
+              ),
+              selectInput("scatter_sample12",
+                label = "Sample 1",
+                choices = NULL
+              ),
+              selectInput("scatter_sample22",
+                label = "Sample 2",
+                choices = NULL
+              ),
+              numericInput("scatter_pt_alpha2",
+                label = "Point Alpha",
+                value = 0.5
+              ),
+              checkboxInput("scatter_log2",
+                label = "Log scale axis",
+                value = TRUE
+              ),
+              plotOutput("scatter2")
+            )
+          )
         ),
         tabPanel(
           "PCA",
-          selectInput("pca_norm_method",
-            label = "Select normalization Method",
-            choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
-            selected = "TMM"
-          ),
-          checkboxInput("pca_scale",
-            label = "Scale data",
-            value = TRUE
-          ),
-          checkboxInput("pca_center",
-            label = "Center data",
-            value = TRUE
-          ),
-          selectInput("pca_component1",
-            label = "X-axis",
-            choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
-            selected = "PC1"
-          ),
-          selectInput("pca_component2",
-            label = "Y-axis",
-            choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
-            selected = "PC1"
-          ),
-          selectInput("pca_color_by",
-            label = "Color by",
-            choices = NULL
-          ),
-          selectInput("pca_shape_by",
-            label = "Shape by",
-            choices = NULL
-          ),
-          plotOutput("pca")
+          fluidRow(
+            column(
+              width = 6,
+              selectInput("pca_norm_method",
+                label = "Select normalization Method",
+                choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
+                selected = "TMM"
+              ),
+              checkboxInput("pca_scale",
+                label = "Scale data",
+                value = TRUE
+              ),
+              checkboxInput("pca_center",
+                label = "Center data",
+                value = TRUE
+              ),
+              selectInput("pca_component1",
+                label = "X-axis",
+                choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
+                selected = "PC1"
+              ),
+              selectInput("pca_component2",
+                label = "Y-axis",
+                choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
+                selected = "PC2"
+              ),
+              selectInput("pca_color_by",
+                label = "Color by",
+                choices = NULL
+              ),
+              selectInput("pca_shape_by",
+                label = "Shape by",
+                choices = NULL
+              ),
+              plotOutput("pca")
+            ),
+            column(
+              width = 6,
+              selectInput("pca_norm_method2",
+                label = "Select normalization Method",
+                choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
+                selected = "TMM"
+              ),
+              checkboxInput("pca_scale2",
+                label = "Scale data",
+                value = TRUE
+              ),
+              checkboxInput("pca_center2",
+                label = "Center data",
+                value = TRUE
+              ),
+              selectInput("pca_component12",
+                label = "X-axis",
+                choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
+                selected = "PC1"
+              ),
+              selectInput("pca_component22",
+                label = "Y-axis",
+                choices = c("PC1", "PC2", "PC3", "PC4", "PC5"),
+                selected = "PC2"
+              ),
+              selectInput("pca_color_by2",
+                label = "Color by",
+                choices = NULL
+              ),
+              selectInput("pca_shape_by2",
+                label = "Shape by",
+                choices = NULL
+              ),
+              plotOutput("pca2")
+            )
+          )
         )
       )
     )
