@@ -21,6 +21,7 @@ server <- function(input, output, session) {
       need("counts" %in% assayNames(raw), "'counts' must be one of the assayNames"),
       need("group" %in% colnames(colData(raw)), "'group' must be present as column in colData")
     )
+    
     # update user choices after loading in raw dataset
     samples <- colnames(raw)
     metadata_cols <- colnames(colData(raw))

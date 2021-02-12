@@ -3,7 +3,7 @@ library(tidyverse)
 library(SummarizedExperiment)
 
 
-# Function for ploting the count distribution of a given sample ----------------
+# Function for plotting the count distribution of a given sample ---------------
 plot_distribution <- function(se, sample_name, n_bins, pseudocount) {
   assays(se)[["counts"]][, sample_name] %>%
     enframe(name = NULL, value = "x") %>%

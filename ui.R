@@ -24,24 +24,36 @@ ui <- fluidPage(
       h3("Step 2. Filtering Parameters"),
       numericInput("min_count",
         label = "Min Count per Group",
-        value = 10
+        value = 10,
+        min = 0,
+        step = 1
       ),
       numericInput("min_total_count",
         label = "Minimum Total Count per Feature",
-        value = 15
+        value = 15,
+        min = 0,
+        step = 1
       ),
       numericInput("min_prop",
         label = "Minimum Proportion per Group",
-        value = 0.7
+        value = 0.7,
+        min = 0, 
+        max = 1,
+        step = 0.1
       ),
       h3("Step 3. Normalization Parameters"),
       numericInput("percentile",
         label = "Percentile for UQ Normalization",
-        value = 0.7
+        value = 0.7,
+        min = 0,
+        max = 1,
+        step = 0.1
       ),
       numericInput("pseudocount",
         label = "Pseudocount for logCPM calculations",
-        value = 2
+        value = 2,
+        min = 0,
+        step = 1
       ),
       selectInput("reference_col",
         label = "Enter reference column for TMM normalization (optional)",
@@ -53,7 +65,9 @@ ui <- fluidPage(
       ),
       numericInput("K",
         label = "Enter Number Factors (k) for RUVg",
-        value = 2
+        value = 2,
+        min = 1,
+        step = 1
       ),
       h3("Step 4. Run"),
       actionButton("run",
@@ -67,16 +81,20 @@ ui <- fluidPage(
         tabPanel(
           "Filtering",
           selectInput("hist_sample",
-            label = "Select Sample To View Distribution",
+            label = "Select sample",
             choices = NULL
           ),
           numericInput("hist_pseudocount",
             label = "Pseudocount after filtering",
-            value = 0
+            value = 0,
+            min = 0,
+            step = 1
           ),
           sliderInput("hist_bins",
             label = "Enter number of bins",
-            value = 30, min = 5, max = 100
+            value = 30, 
+            min = 5, 
+            max = 100
           ),
           fluidRow(
             column(
@@ -97,7 +115,7 @@ ui <- fluidPage(
             column(
               width = 6,
               selectInput("rle_norm_method",
-                label = "Select normalization Method",
+                label = "Select normalization method",
                 choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
                 selected = "TMM"
               ),
@@ -107,18 +125,24 @@ ui <- fluidPage(
               ),
               numericInput("rle_outlier_shape",
                 label = "Outlier shape",
-                value = NA
+                value = NA,
+                min = 0, 
+                max = 25,
+                step = 1
               ),
               numericInput("rle_outlier_alpha",
                 label = "Outlier alpha",
-                value = 0.5
+                value = 0.5,
+                min = 0, 
+                max = 1,
+                step = 0.1
               ),
               plotOutput("rle")
             ),
             column(
               width = 6,
               selectInput("rle_norm_method2",
-                label = "Select normalization Method",
+                label = "Select normalization method",
                 choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
                 selected = "TMM"
               ),
@@ -128,11 +152,17 @@ ui <- fluidPage(
               ),
               numericInput("rle_outlier_shape2",
                 label = "Outlier shape",
-                value = NA
+                value = NA,
+                min = 0,
+                max = 25,
+                step = 1
               ),
               numericInput("rle_outlier_alpha2",
                 label = "Outlier alpha",
-                value = 0.5
+                value = 0.5,
+                min = 0,
+                max = 1,
+                step = 0.1
               ),
               plotOutput("rle2")
             )
@@ -213,7 +243,10 @@ ui <- fluidPage(
               ),
               numericInput("scatter_pt_alpha",
                 label = "Point Alpha",
-                value = 0.5
+                value = 0.5,
+                min = 0,
+                max = 1,
+                step = 0.1
               ),
               checkboxInput("scatter_log",
                 label = "Log scale axis",
@@ -238,7 +271,10 @@ ui <- fluidPage(
               ),
               numericInput("scatter_pt_alpha2",
                 label = "Point Alpha",
-                value = 0.5
+                value = 0.5,
+                min = 0,
+                max = 1,
+                step = 0.1
               ),
               checkboxInput("scatter_log2",
                 label = "Log scale axis",
@@ -254,7 +290,7 @@ ui <- fluidPage(
             column(
               width = 6,
               selectInput("pca_norm_method",
-                label = "Select normalization Method",
+                label = "Select normalization method",
                 choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
                 selected = "TMM"
               ),
@@ -289,7 +325,7 @@ ui <- fluidPage(
             column(
               width = 6,
               selectInput("pca_norm_method2",
-                label = "Select normalization Method",
+                label = "Select normalization method",
                 choices = c(list("TMM" = "logTMM", "RLE" = "logRLE", "UQ" = "logUQ", "RUVg" = "logRUVg", "QS" = "logQS", "LibrarySize" = "logLibrarySize")),
                 selected = "TMM"
               ),
