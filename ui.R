@@ -358,6 +358,41 @@ ui <- fluidPage(
               plotOutput("pca2")
             )
           )
+        ),
+        tabPanel(
+          "Corr",
+          column(
+            width = 6,
+            selectInput("cor_norm_method",
+                        label = "Select normalization method",
+                        choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                        selected = "TMM"),
+            selectizeInput("cor_samples",
+                           label = "Select samples",
+                           choices = NULL,
+                           multiple = TRUE,
+                           size = 10),
+            selectInput("cor_viz_method",
+                        label = "Visualization method",
+                        choices = c("circle", "square", "ellipse", "number", "pie", "shade", "color")),
+            plotOutput("corplot")
+          ),
+          column(
+            width = 6,
+            selectInput("cor_norm_method2",
+                        label = "Select normalization method",
+                        choices = c("TMM", "RLE", "UQ", "RUVg", "QS", "LibrarySize"),
+                        selected = "TMM"),
+            selectizeInput("cor_samples2",
+                           label = "Select samples",
+                           choices = NULL,
+                           multiple = TRUE,
+                           size = 10),
+            selectInput("cor_viz_method2",
+                        label = "Visualization method",
+                        choices = c("circle", "square", "ellipse", "number", "pie", "shade", "color")),
+            plotOutput("corplot2")
+          ),
         )
       )
     )

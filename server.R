@@ -41,6 +41,8 @@ server <- function(input, output, session) {
     updateSelectInput(session, "pca_shape_by", choices = c(metadata_cols, "NULL"), selected = "NULL")
     updateSelectInput(session, "pca_color_by2", choices = metadata_cols, selected = "group")
     updateSelectInput(session, "pca_shape_by2", choices = c(metadata_cols, "NULL"), selected = "NULL")
+    updateSelectizeInput(session, "cor_samples", choices = samples, selected = samples[1:10])
+    updateSelectizeInput(session, "cor_samples2", choices = samples, selected = samples[1:10])
 
     # filter/normalize/plot on RUN
     observeEvent(input$run, {
@@ -89,6 +91,12 @@ server <- function(input, output, session) {
       })
       output$pca2 <- renderPlot({
         plot_pca(normed, input$pca_norm_method2, input$pca_scale2, input$pca_center2, input$pca_component12, input$pca_component22, input$pca_color_by2, input$pca_shape_by2)
+      })
+      output$corplot <- renderPlot({
+        plot_cor(normed, input$cor_norm_method, input$cor_samples, input$cor_viz_method)
+        })
+      output$corplot2 <- renderPlot({
+        plot_cor(normed, input$cor_norm_method2, input$cor_samples2, input$cor_viz_method2)
       })
     })
   })

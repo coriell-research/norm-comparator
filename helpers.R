@@ -159,3 +159,17 @@ normalize_data <- function(se, pseudocount, percentile, reference_col, control_g
 
   se
 }
+
+# Function for creating correlation plots --------------------------------------
+plot_cor <- function(se, assay_name, cor_samples, viz_method) {
+  cor_mat <- cor(assays(se)[[assay_name]][, cor_samples])
+  corrplot::corrplot(
+    cor_mat,
+    method = viz_method,
+    type = "lower", 
+    col = viridis::viridis(100), 
+    outline = TRUE,
+    tl.col = "black",
+    tl.srt = 45,
+    diag = FALSE)
+}

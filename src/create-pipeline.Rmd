@@ -300,3 +300,25 @@ plot_pca("logRUVg", color_by = "treatment", shape_by = "time_hr")
 plot_pca("logTC", color_by = "treatment", shape_by = "time_hr")
 ```
 
+## Correlation plots
+
+```{r}
+library(corrplot)
+
+
+plot_cor <- function(se, assay_name, samples, viz_method) {
+  cor_data <- cor(assays(se)[[assay_name]][, samples])
+  corrplot::corrplot(
+    cor_data,
+    method = viz_method,
+    type = "lower", 
+    col = viridis::viridis(100), 
+    outline = TRUE,
+    tl.col = "black",
+    tl.srt = 45,
+    diag = FALSE)
+}
+
+plot_cor(filt, "TMM", colnames(filt)[c(2, 4, 6, 8, 10)], "circle")
+```
+
