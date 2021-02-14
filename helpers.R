@@ -173,3 +173,21 @@ plot_cor <- function(se, assay_name, cor_samples, viz_method) {
     tl.srt = 45,
     diag = FALSE)
 }
+
+# Function for plotting heatmaps -----------------------------------------------
+plot_heatmap <- function(se, assay_name, samples, n_features, cd_rows, cd_cols, cd_method) {
+  mat <- assays(se)[[assay_name]]
+  row_vars <- matrixStats::rowVars(mat)
+  var_order <- order(row_vars, decreasing = TRUE)
+  var_mat <- mat[head(var_order, n_features), samples]
+  var_mat <- as.matrix(var_mat)
+  var_mat <- na.omit(var_mat)
+  pheatmap::pheatmap(var_mat, 
+                     scale = "row",
+                     color = colorRampPalette(c("dodgerblue3", "grey99", "firebrick3"))(50),
+                     show_rownames = FALSE,
+                     treeheight_row = 0,
+                     clustering_distance_rows = cd_rows,
+                     clustering_distance_cols = cd_cols,
+                     clustering_method = cd_method)
+}

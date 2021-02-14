@@ -43,6 +43,8 @@ server <- function(input, output, session) {
     updateSelectInput(session, "pca_shape_by2", choices = c(metadata_cols, "NULL"), selected = "NULL")
     updateSelectizeInput(session, "cor_samples", choices = samples, selected = samples[1:10])
     updateSelectizeInput(session, "cor_samples2", choices = samples, selected = samples[1:10])
+    updateSelectizeInput(session, "hm_samples", choices = samples, selected = samples[1:10])
+    updateSelectizeInput(session, "hm_samples2", choices = samples, selected = samples[1:10])
 
     # filter/normalize/plot on RUN
     observeEvent(input$run, {
@@ -97,6 +99,12 @@ server <- function(input, output, session) {
         })
       output$corplot2 <- renderPlot({
         plot_cor(normed, input$cor_norm_method2, input$cor_samples2, input$cor_viz_method2)
+      })
+      output$hm <- renderPlot({
+        plot_heatmap(normed, input$hm_norm_method, input$hm_samples, input$hm_features, input$hm_cd_rows, input$hm_cd_cols, input$hm_clust_method)
+      })
+      output$hm2 <- renderPlot({
+        plot_heatmap(normed, input$hm_norm_method2, input$hm_samples2, input$hm_features2, input$hm_cd_rows2, input$hm_cd_cols2, input$hm_clust_method2)
       })
     })
   })

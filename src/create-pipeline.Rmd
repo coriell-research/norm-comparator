@@ -322,3 +322,23 @@ plot_cor <- function(se, assay_name, samples, viz_method) {
 plot_cor(filt, "TMM", colnames(filt)[c(2, 4, 6, 8, 10)], "circle")
 ```
 
+## Heatmap on most variable genes
+
+```{r}
+plot_heatmap <- function(se, assay_name, samples, n_features, cd_rows, cd_cols, cd_method) {
+  mat <- assays(se)[[assay_name]]
+  row_vars <- matrixStats::rowVars(mat)
+  var_order <- order(row_vars, decreasing = TRUE)
+  var_mat <- mat[head(var_order, n_features), samples]
+  pheatmap::pheatmap(var_mat, 
+                     scale = "row",
+                     color = colorRampPalette(c("dodgerblue3", "grey99", "firebrick3"))(50),
+                     show_rownames = FALSE,
+                     clustering_distance_rows = cd_rows,
+                     clustering_distance_cols = cd_cols,
+                     clustering_method = cd_method)
+}
+  
+plot_heatmap(filt, "logTMM", colnames(filt)[1:10], 1000, "correlation", "correlation", "ward.D2")  
+```
+
