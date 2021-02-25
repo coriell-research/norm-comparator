@@ -3,6 +3,53 @@ library(tidyverse)
 library(SummarizedExperiment)
 
 
+# Function for normalizing filtered dataset
+normalize_data <- function(se, pseudocount, percentile, reference_col, control_genes, K) {
+  # Total count ------------------------------------------------------------------
+  tc <- edgeR::cpm(assays(se)[["counts"]])
+  tc_lcpm <- edgeR::cpm(assays(se)[["counts"]], log = TRUE, prior.count = pseudocount)
+  
+  assays(se)[["LibrarySize"]] <- tc
+  assays(se)[["logLibrarySize"]] <- tc_lcpm
+  
+  # edgeR ------------------------------------------------------------------------
+  tmm <- edgeR::calcNormFactors(se, method = "TMM", refColumn = reference_col)
+  uq <- edgeR::calcNormFactors(se, method = "upperquartile", p = percentile)
+  rle <- edgeR::calcNormFactors(se, method = "RLE")
+  
+  tmm_cpm <- edgeR::cpm(tmm)
+  uq_cpm <- edgeR::cpm(uq)
+  rle_cpm <- edgeR::cpm(rle)
+  tmm_lcpm <- edgeR::cpm(tmm, log = TRUE, prior.count = pseudocount)
+  uq_lcpm <- edgeR::cpm(uq, log = TRUE, prior.count = pseudocount)
+  rle_lcpm <- edgeR::cpm(rle, log = TRUE, prior.count = pseudocount)
+  
+  assays(se)[["TMM"]] <- tmm_cpm
+  assays(se)[["UQ"]] <- uq_cpm
+  assays(se)[["RLE"]] <- rle_cpm
+  assays(se)[["logTMM"]] <- tmm_lcpm
+  assays(se)[["logUQ"]] <- uq_lcpm
+  assays(se)[["logRLE"]] <- rle_lcpm
+  
+  # QSmooth ----------------------------------------------------------------------
+  qs <- qsmooth::qsmooth(se, group_factor = se$group)
+  qs_cpm <- edgeR::cpm(qsmooth::qsmoothData(qs))
+  qs_lcpm <- edgeR::cpm(qsmooth::qsmoothData(qs), log = TRUE, prior.count = pseudocount)
+  
+  assays(se)[["QS"]] <- qs_cpm
+  assays(se)[["logQS"]] <- qs_lcpm
+  
+  # RUVg -------------------------------------------------------------------------
+  ruv_set <- RUVSeq::RUVg(as.matrix(assays(se)[["counts"]]), control_genes, k = K)
+  ruv_cpm <- edgeR::cpm(ruv_set$normalizedCounts)
+  ruv_lcpm <- edgeR::cpm(ruv_set$normalizedCounts, log = TRUE, prior.count = pseudocount)
+  
+  assays(se)[["RUVg"]] <- ruv_cpm
+  assays(se)[["logRUVg"]] <- ruv_lcpm
+  
+  se
+}
+
 # Function for plotting the count distribution of a given sample ---------------
 plot_distribution <- function(se, sample_name, n_bins, pseudocount) {
   assays(se)[["counts"]][, sample_name] %>%
@@ -113,53 +160,6 @@ plot_pca <- function(se,
   }
 }
 
-# Function for normalizing filtered dataset
-normalize_data <- function(se, pseudocount, percentile, reference_col, control_genes, K) {
-  # Total count ------------------------------------------------------------------
-  tc <- edgeR::cpm(assays(se)[["counts"]])
-  tc_lcpm <- edgeR::cpm(assays(se)[["counts"]], log = TRUE, prior.count = pseudocount)
-
-  assays(se)[["LibrarySize"]] <- tc
-  assays(se)[["logLibrarySize"]] <- tc_lcpm
-
-  # edgeR ------------------------------------------------------------------------
-  tmm <- edgeR::calcNormFactors(se, method = "TMM", refColumn = reference_col)
-  uq <- edgeR::calcNormFactors(se, method = "upperquartile", p = percentile)
-  rle <- edgeR::calcNormFactors(se, method = "RLE")
-
-  tmm_cpm <- edgeR::cpm(tmm)
-  uq_cpm <- edgeR::cpm(uq)
-  rle_cpm <- edgeR::cpm(rle)
-  tmm_lcpm <- edgeR::cpm(tmm, log = TRUE, prior.count = pseudocount)
-  uq_lcpm <- edgeR::cpm(uq, log = TRUE, prior.count = pseudocount)
-  rle_lcpm <- edgeR::cpm(rle, log = TRUE, prior.count = pseudocount)
-
-  assays(se)[["TMM"]] <- tmm_cpm
-  assays(se)[["UQ"]] <- uq_cpm
-  assays(se)[["RLE"]] <- rle_cpm
-  assays(se)[["logTMM"]] <- tmm_lcpm
-  assays(se)[["logUQ"]] <- uq_lcpm
-  assays(se)[["logRLE"]] <- rle_lcpm
-
-  # QSmooth ----------------------------------------------------------------------
-  qs <- qsmooth::qsmooth(se, group_factor = se$group)
-  qs_cpm <- edgeR::cpm(qsmooth::qsmoothData(qs))
-  qs_lcpm <- edgeR::cpm(qsmooth::qsmoothData(qs), log = TRUE, prior.count = pseudocount)
-
-  assays(se)[["QS"]] <- qs_cpm
-  assays(se)[["logQS"]] <- qs_lcpm
-
-  # RUVg -------------------------------------------------------------------------
-  ruv_set <- RUVSeq::RUVg(as.matrix(assays(se)[["counts"]]), control_genes, k = K)
-  ruv_cpm <- edgeR::cpm(ruv_set$normalizedCounts)
-  ruv_lcpm <- edgeR::cpm(ruv_set$normalizedCounts, log = TRUE, prior.count = pseudocount)
-
-  assays(se)[["RUVg"]] <- ruv_cpm
-  assays(se)[["logRUVg"]] <- ruv_lcpm
-
-  se
-}
-
 # Function for creating correlation plots --------------------------------------
 plot_cor <- function(se, assay_name, cor_samples, viz_method) {
   cor_mat <- cor(assays(se)[[assay_name]][, cor_samples])
@@ -171,7 +171,7 @@ plot_cor <- function(se, assay_name, cor_samples, viz_method) {
     outline = TRUE,
     tl.col = "black",
     tl.srt = 45,
-    diag = FALSE)
+    diag = TRUE)
 }
 
 # Function for plotting heatmaps -----------------------------------------------
